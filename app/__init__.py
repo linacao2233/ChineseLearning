@@ -2,6 +2,7 @@ from json import load
 from flask import Flask
 
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 # Define the WSGI application object
 app = Flask(__name__)
@@ -9,10 +10,11 @@ app = Flask(__name__)
 # Configurations
 
 app.config.from_object('config')
-
 # Define the database object which is imported
 # by modules and controllers
 db = SQLAlchemy(app)
+
+migrate = Migrate(app,db)
 
 # # Sample HTTP error handling
 # @app.errorhandler(404)

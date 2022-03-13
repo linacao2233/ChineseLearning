@@ -1,6 +1,6 @@
-#from dataHandler.flashcard import loadCharacters
+from dataHandler.flashcard import loadCharacters
 
-#loadCharacters()
+loadCharacters()
 
-from dataHandler.flashcard import updatepinyin
-updatepinyin()
+# from dataHandler.flashcard import updatepinyin
+# updatepinyin()

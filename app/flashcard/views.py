@@ -11,7 +11,8 @@ import json
 
 # Import module forms
 
-from app.flashcard.models import Characters
+from app.flashcard.models import Characters, UserCharacterProgress, UserTestCharacterResult,UserTestScoreRecord
+from app.flashcard.functions import get_or_create
 
 # Define the blueprint: 'auth', set its url prefix: app.url/auth
 flashcard = Blueprint('flashcard', __name__, url_prefix='/flashcard')
@@ -32,3 +33,31 @@ def get_cards():
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
+@flashcard.route('/updateresult', methods =['GET', 'POST'])
+def recordResults():
+    user = request.json.get('user','ayla')
+    results = request.json.get('testresults')
+
+    addedresults = []
+
+    for (key,value) in results.items():
+        characterresult = UserTestCharacterResult(
+            user = user,
+            character = key,
+            result = value,
+        )
+        db.session.add(characterresult)
+        db.session.commit()
+        addedresults.append(characterresult.toJson())
+    
+    return jsonify(addedresults)
+
+@flashcard.route('/character', methods=['GET', 'POST'])
+def get_character_results():
+    chars = UserTestCharacterResult.query.all()
+    
+    jsonfiles = [a.toJson() for a in chars]
+
+    response = jsonify(jsonfiles)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
