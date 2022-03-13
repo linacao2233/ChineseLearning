@@ -20,9 +20,12 @@ flashcard = Blueprint('flashcard', __name__, url_prefix='/flashcard')
 @flashcard.route('/', methods=['GET', 'POST'])
 def get_cards():
     args = request.args
-    number = args.get('n',8)
-    
-    chars = Characters.query.limit(number).all()
+    number = int(args.get('n',8))
+    page = int(args.get('page',1))
+
+    chars_page = Characters.query.paginate(page=page, per_page=number)
+
+    chars = chars_page.items
 
     jsonfiles = [{'name': a.name, 'pinyin':a.pinyin} for a in chars]
     response = jsonify(jsonfiles)
