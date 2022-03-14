@@ -4,14 +4,13 @@ from app import db
 import json
 
 Config = {
-    'file': '/Users/linacao/Documents/personalWork/ChineseLearning/text.json'
+    'file': 'static/text.json'
 }
 
 def loadCharacters():
-
     with open(Config['file'],'r', encoding='utf-8') as file:
         texts = json.load(file)
-
+        
     # get all new charcters
     chars = ''.join(texts['newCharacters'].values())
     for char in chars:

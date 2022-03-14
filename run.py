@@ -1,5 +1,7 @@
 from app import app
-app.run()
+
+if __name__ == "__main__":
+    app.run()
 
 # from flask import Flask
 # from flask_sqlalchemy import SQLAlchemy
@@ -7,3 +9,4 @@ app.run()
 # app = Flask(__name__)
 
 # app.run()
+
