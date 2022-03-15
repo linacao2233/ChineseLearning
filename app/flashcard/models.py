@@ -27,6 +27,8 @@ class Characters(Base):
     known = db.Column(db.Boolean, default=False)
     learning = db.Column(db.Boolean,default=False)
     pinyin = db.Column(db.String(100))
+    text_id = db.Column(db.Integer, db.ForeignKey('chinesetexts.id'))
+
 
     characterProgress = db.relationship('UserCharacterProgress',
                                         backref='characters',
@@ -122,6 +124,33 @@ class UserTestScoreRecord(Base):
          self.user_id = get_or_create(db.session,User,name=user).id
          self.testscore = score
          self.testtime = time
+
+class ChineseTexts(Base):
+    __tablename__ = 'chinesetexts'
+
+    subject = db.Column(db.String, nullable=False)
+    text = db.Column(db.String)
+    characters = db.relationship('Characters',
+                                  backref='text',
+                                  lazy = True)
+    words = db.Column(db.String)
+
+    def __init__(self, subject, text, words=''):
+        self.subject = subject
+        self.text = text
+        self.words = words
+    
+    def addCharacters(self,characters):
+        for character in characters:
+            chardata = get_or_create(db.session,Characters,name=character)
+            print(character, self.id)
+            chardata.text_id = self.id
+            db.session.add(chardata)
+            db.session.commit()
+
+    
+
+
        
 
 

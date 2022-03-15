@@ -1,4 +1,4 @@
-from app.flashcard.models import Characters
+from app.flashcard.models import Characters,ChineseTexts
 from app import db
 
 import json
@@ -10,7 +10,7 @@ Config = {
 def loadCharacters():
     with open(Config['file'],'r', encoding='utf-8') as file:
         texts = json.load(file)
-        
+
     # get all new charcters
     chars = ''.join(texts['newCharacters'].values())
     for char in chars:
@@ -36,5 +36,26 @@ def updatepinyin():
         db.session.commit()
     
     return 0
+
+
+def loadTexts():
+    with open(Config['file'],'r', encoding='utf-8') as file:
+        texts = json.load(file)
+    
+    for (key,value) in texts['title'].items():
+        text = texts['text'].get(key,'')
+        words = texts['words'].get(key,'')
+        subject = value
+        characters = texts['newCharacters'].get(key,[])
+        print(characters)
+
+        newtext = ChineseTexts(subject,text,words=words)
+        db.session.add(newtext)
+        db.session.commit()
+        
+        newtext.addCharacters(list(characters))
+
+        db.session.add(newtext)
+        db.session.commit()
 
 
