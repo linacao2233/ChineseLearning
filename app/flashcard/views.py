@@ -25,8 +25,6 @@ def get_cards():
     page = int(args.get('page',1))
     user = args.get('user')
 
-    print(number, page)
-
     chars_page = Characters.query.paginate(page=page, per_page=number)
     chars = chars_page.items
 
