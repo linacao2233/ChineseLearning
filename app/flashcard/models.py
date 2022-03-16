@@ -143,7 +143,6 @@ class ChineseTexts(Base):
     def addCharacters(self,characters):
         for character in characters:
             chardata = get_or_create(db.session,Characters,name=character)
-            print(character, self.id)
             chardata.text_id = self.id
             db.session.add(chardata)
             db.session.commit()
