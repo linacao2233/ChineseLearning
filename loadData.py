@@ -1,9 +1,13 @@
-from dataHandler.flashcard import loadCharacters,loadTexts
+from dataHandler.flashcard import *
 
-loadTexts()
+initiateUserProgress()
 
-# if __name__=='__main__':
-#     loadCharacters()
-
-# from dataHandler.flashcard import updatepinyin
-# updatepinyin()
+if __name__ == "__main__":
+    a = sys.argv[1]
+    if a =='updateprogress':
+        updateUserProgress()
+    elif a == 'loadtext':
+        loadTexts()
+    elif a == 'initiateprogress':
+        initiateUserProgress()
+        

@@ -1,7 +1,7 @@
-from app.flashcard.models import Characters,ChineseTexts
+from app.flashcard.models import *
 from app import db
 
-import json
+import json,sys
 
 Config = {
     'file': 'static/text.json'
@@ -57,5 +57,46 @@ def loadTexts():
 
         db.session.add(newtext)
         db.session.commit()
+
+
+def updateUserProgress():
+    '''
+    use test results to update user character progress
+    '''
+    testprogress = UserTestCharacterResult.query.all()
+    for test in testprogress:
+        result = get_or_create(db.session,UserCharacterProgress,
+                  user=test.user.name,
+                  character=test.characters.name)
+        result.known = test.testresult
+        result.lastShown = test.testtime
+
+        db.session.add(result)
+        db.session.commit()
+
+def initiateUserProgress():
+    '''
+    set all learning parameters to be 1, load all characters to user progress
+    '''
+    chars = Characters.query.all()
+    users = User.query.all()
+
+    for user in users:
+        for char in chars:
+            progressinstance = UserCharacterProgress.query.filter_by(
+                             user = user,
+                             characters = char
+            ).first()
+
+            if progressinstance:
+                result = progressinstance
+            else:
+                result = UserCharacterProgress(user.name,char.name)
+
+            result.learning = False
+            result.known = False
+
+            db.session.add(result)
+            db.session.commit()
 
 

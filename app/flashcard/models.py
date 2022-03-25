@@ -90,6 +90,22 @@ class UserCharacterProgress(Base):
     def __init__(self,user,character):
         self.user_id = User.query.filter_by(name=user).first().id
         self.character_id = Characters.query.filter_by(name=character).first().id
+    
+    def calProbability(self):
+        #update the showing/testing probability by showingtimes and last Showntime
+        if self.lastShown: 
+            tillnow = datetime.now() - self.lastShown
+            self.probability = max(tillnow.days/10, 1)
+        else:
+            self.probability = 1
+    
+    def toJson(self):
+        return {
+            'user': self.user.name,
+            'character': self.characters.name,
+            'pinyin':self.characters.pinyin
+        }
+
 
     
 class UserTestCharacterResult(Base):
